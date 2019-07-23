@@ -1,0 +1,2 @@
+model_checkpoint_path: "D:\\LSP\\UNet\\tonsil20x1bin1chan\\TFModel\\model.ckpt"
+all_model_checkpoint_paths: "D:\\LSP\\UNet\\tonsil20x1bin1chan\\TFModel\\model.ckpt"
