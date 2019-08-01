@@ -1,3 +1,5 @@
+**unmicst - UNet Model for Identifying Cells and Segmenting Tissue**
+
 # Image Preprocessing {#preprocess}
 
 Images can be preprocessed by inferring nuclei contours via a pretrained UNet model. The model is trained on 3 classes : background, nuclei contours and nuclei centers. The resulting probability maps can then be loaded into any modular segmentation pipeline that may use (but not limited to) a marker controlled watershed algorithm. 
