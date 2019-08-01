@@ -1,4 +1,4 @@
-**unmicst - UNet Model for Identifying Cells and Segmenting Tissue**
+# **UnMicst - UNet Model for Identifying Cells and Segmenting Tissue**
 
 # Image Preprocessing {#preprocess}
 
@@ -8,7 +8,7 @@ The only **input** file is:
 an .ome.tif or .tif  (preferably flat field corrected, minimal saturated pixels, and in focus. The model is trained on images acquired at 20x with binning 2x2 or a pixel size of 0.65 microns/px. If your settings differ, you can upsample/downsample to some extent.
 
 **How to install:**
-1. Copy the python script, UNet model, and ImageScience toolbox to your computer. Clone from https://github.com/HMS-IDAC/UNet4Sage.git
+1. Copy the python script, UNet model, and ImageScience toolbox to your computer. Clone from https://github.com/HMS-IDAC/unmicst.git
 2. Pip install tensorflow (or tensorflow_gpu with CUDA drivers and CuDNN libraries), matplotlib, scikit-image, Pillow, tifffile, Image, scipy
 
 **How to run:**<br/>
