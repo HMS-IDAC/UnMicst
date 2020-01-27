@@ -534,6 +534,7 @@ if __name__ == '__main__':
 	parser = argparse.ArgumentParser()
 	parser.add_argument("imagePath", help="path to the .tif file")
 	parser.add_argument("--channel", help="channel to perform inference on", type=int, default=0)
+	parser.add_argument("--TMA", help="specify if TMA", action="store_true")
 	parser.add_argument("--scalingFactor", help="factor by which to increase/decrease image size by", type=float,
 						default=1)
 	args = parser.parse_args()
@@ -541,38 +542,47 @@ if __name__ == '__main__':
 	logPath = ''
 	modelPath = 'D:\\LSP\\UNet\\tonsil20x1bin1chan\\TFModel - 3class 16 kernels 5ks 2 layers'
 	pmPath = ''
+
 	UNet2D.singleImageInferenceSetup(modelPath, 1)
 	imagePath = args.imagePath
+	sampleList = glob.glob(imagePath + '/exemplar*')
 	dapiChannel = args.channel
 	dsFactor = args.scalingFactor
-	parentFolder = os.path.dirname(os.path.dirname(imagePath))
-	fileName = os.path.basename(imagePath)
-	fileNamePrefix = fileName.split(os.extsep, 1)
-	I = tifffile.imread(imagePath, key=dapiChannel)
-	rawI = I
-	hsize = int((float(I.shape[0]) * float(dsFactor)))
-	vsize = int((float(I.shape[1]) * float(dsFactor)))
-	I = resize(I, (hsize, vsize))
-	I = im2double(sk.rescale_intensity(I, in_range=(np.min(I), np.max(I)), out_range=(0, 0.983)))
-	rawI = im2double(rawI) / np.max(im2double(rawI))
-	outputPath = parentFolder + '//prob_maps'
-	if not os.path.exists(outputPath):
-		os.makedirs(outputPath)
-	K = np.zeros((2, rawI.shape[0], rawI.shape[1]))
-	contours = UNet2D.singleImageInference(I, 'accumulate', 1)
-	hsize = int((float(I.shape[0]) * float(1 / dsFactor)))
-	vsize = int((float(I.shape[1]) * float(1 / dsFactor)))
-	contours = resize(contours, (rawI.shape[0], rawI.shape[1]))
-	K[1, :, :] = rawI
-	K[0, :, :] = contours
-	tifwrite(np.uint8(255 * K),
-			 outputPath + '//' + fileNamePrefix[0] + '_ContoursPM_' + str(dapiChannel + 1) + '.tif')
-	del K
-	K = np.zeros((1, rawI.shape[0], rawI.shape[1]))
-	nuclei = UNet2D.singleImageInference(I, 'accumulate', 2)
-	nuclei = resize(nuclei, (rawI.shape[0], rawI.shape[1]))
-	K[0, :, :] = nuclei
-	tifwrite(np.uint8(255 * K),
-			 outputPath + '//' + fileNamePrefix[0] + '_NucleiPM_' + str(dapiChannel + 1) + '.tif')
-	del K
+	for iSample in sampleList:
+		if args.TMA:
+			fileList = [x for x in glob.glob(iSample + '\\dearray\\*.tif') if x != (iSample + '\\dearray\\TMA_MAP.tif')]
+			print(iSample)
+		else:
+			fileList = glob.glob(iSample + '//registration//*ome.tif')
+		print(fileList)
+		for iFile in fileList:
+			fileName = os.path.basename(iFile)
+			fileNamePrefix = fileName.split(os.extsep, 1)
+			I = tifffile.imread(iFile, key=dapiChannel)
+			rawI = I
+			hsize = int((float(I.shape[0]) * float(dsFactor)))
+			vsize = int((float(I.shape[1]) * float(dsFactor)))
+			I = resize(I, (hsize, vsize))
+			I = im2double(sk.rescale_intensity(I, in_range=(np.min(I), np.max(I)), out_range=(0, 0.983)))
+			rawI = im2double(rawI) / np.max(im2double(rawI))
+			outputPath = iSample + '//prob_maps'
+			if not os.path.exists(outputPath):
+				os.makedirs(outputPath)
+			K = np.zeros((2, rawI.shape[0], rawI.shape[1]))
+			contours = UNet2D.singleImageInference(I, 'accumulate', 1)
+			hsize = int((float(I.shape[0]) * float(1 / dsFactor)))
+			vsize = int((float(I.shape[1]) * float(1 / dsFactor)))
+			contours = resize(contours, (rawI.shape[0], rawI.shape[1]))
+			K[1, :, :] = rawI
+			K[0, :, :] = contours
+			tifwrite(np.uint8(255 * K),
+					 outputPath + '//' + fileNamePrefix[0] + '_ContoursPM_' + str(dapiChannel + 1) + '.tif')
+			del K
+			K = np.zeros((1, rawI.shape[0], rawI.shape[1]))
+			nuclei = UNet2D.singleImageInference(I, 'accumulate', 2)
+			nuclei = resize(nuclei, (rawI.shape[0], rawI.shape[1]))
+			K[0, :, :] = nuclei
+			tifwrite(np.uint8(255 * K),
+					 outputPath + '//' + fileNamePrefix[0] + '_NucleiPM_' + str(dapiChannel + 1) + '.tif')
+			del K
 	UNet2D.singleImageInferenceCleanup()
