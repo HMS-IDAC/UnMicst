@@ -541,9 +541,10 @@ if __name__ == '__main__':
 	args = parser.parse_args()
 
 	logPath = ''
-	modelPath = 'D:\\LSP\\UNet\\tonsil20x1bin1chan\\TFModel - 3class 16 kernels 5ks 2 layers'
+	#modelPath = 'D:\\LSP\\UNet\\tonsil20x1bin1chan\\TFModel - 3class 16 kernels 5ks 2 layers'
+	modelPath = 'TFModel - 3class 16 kernels 5ks 2 layers'
 	pmPath = ''
-	UNet2D.singleImageInferenceSetup(modelPath, 1)
+	UNet2D.singleImageInferenceSetup(modelPath, 0)
 	imagePath = args.imagePath
 	dapiChannel = args.channel
 	dsFactor = args.scalingFactor
