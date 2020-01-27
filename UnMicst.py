@@ -9,7 +9,8 @@ import argparse
 
 import sys
 
-sys.path.insert(0, 'C:\\Users\\Public\\Documents\\ImageScience')
+#sys.path.insert(0, 'C:\\Users\\Public\\Documents\\ImageScience')
+
 from toolbox.imtools import *
 from toolbox.ftools import *
 from toolbox.PartitionOfImage import PI2D
@@ -533,6 +534,7 @@ class UNet2D:
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser()
 	parser.add_argument("imagePath", help="path to the .tif file")
+	parser.add_argument("--outputPath", help="output path of probability map")
 	parser.add_argument("--channel", help="channel to perform inference on", type=int, default=0)
 	parser.add_argument("--scalingFactor", help="factor by which to increase/decrease image size by", type=float,
 						default=1)
@@ -555,9 +557,11 @@ if __name__ == '__main__':
 	I = resize(I, (hsize, vsize))
 	I = im2double(sk.rescale_intensity(I, in_range=(np.min(I), np.max(I)), out_range=(0, 0.983)))
 	rawI = im2double(rawI) / np.max(im2double(rawI))
-	outputPath = parentFolder + '//prob_maps'
-	if not os.path.exists(outputPath):
-		os.makedirs(outputPath)
+	if not args.outputPath:
+		args.outputPath = parentFolder + '//prob_maps'
+
+	if not os.path.exists(args.outputPath):
+		os.makedirs(args.outputPath)
 	K = np.zeros((2, rawI.shape[0], rawI.shape[1]))
 	contours = UNet2D.singleImageInference(I, 'accumulate', 1)
 	hsize = int((float(I.shape[0]) * float(1 / dsFactor)))
@@ -566,13 +570,13 @@ if __name__ == '__main__':
 	K[1, :, :] = rawI
 	K[0, :, :] = contours
 	tifwrite(np.uint8(255 * K),
-			 outputPath + '//' + fileNamePrefix[0] + '_ContoursPM_' + str(dapiChannel + 1) + '.tif')
+			 args.outputPath + '//' + fileNamePrefix[0] + '_ContoursPM_' + str(dapiChannel + 1) + '.tif')
 	del K
 	K = np.zeros((1, rawI.shape[0], rawI.shape[1]))
 	nuclei = UNet2D.singleImageInference(I, 'accumulate', 2)
 	nuclei = resize(nuclei, (rawI.shape[0], rawI.shape[1]))
 	K[0, :, :] = nuclei
 	tifwrite(np.uint8(255 * K),
-			 outputPath + '//' + fileNamePrefix[0] + '_NucleiPM_' + str(dapiChannel + 1) + '.tif')
+			 args.outputPath + '//' + fileNamePrefix[0] + '_NucleiPM_' + str(dapiChannel + 1) + '.tif')
 	del K
 	UNet2D.singleImageInferenceCleanup()
