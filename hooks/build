@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+GPU_IMAGE_NAME="${IMAGE_NAME}-gpu"
+docker build --build-arg TF_IMAGE=tensorflow/tensorflow:1.15.0-gpu-py3 -f $DOCKERFILE_PATH -t $GPU_IMAGE_NAME .
+docker push $GPU_IMAGE_NAME
+
+docker build -f $DOCKERFILE_PATH -t $IMAGE_NAME .
