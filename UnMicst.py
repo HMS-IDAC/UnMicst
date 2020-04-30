@@ -5,6 +5,7 @@ import shutil
 import scipy.io as sio
 import os, fnmatch, PIL, glob
 import skimage.exposure as sk
+import skimage.io
 import argparse
 
 import sys
@@ -480,16 +481,22 @@ class UNet2D:
 
 		sess.close()
 
-	def singleImageInferenceSetup(modelPath, gpuIndex):
+	def singleImageInferenceSetup(modelPath, gpuIndex,mean,std):
 		os.environ['CUDA_VISIBLE_DEVICES'] = '%d' % gpuIndex
 
 		variablesPath = pathjoin(modelPath, 'model.ckpt')
 
 		hp = loadData(pathjoin(modelPath, 'hp.data'))
 		UNet2D.setupWithHP(hp)
+		if mean ==-1:
+			UNet2D.DatasetMean = loadData(pathjoin(modelPath, 'datasetMean.data'))
+		else:
+			UNet2D.DatasetMean = mean
 
-		UNet2D.DatasetMean = loadData(pathjoin(modelPath, 'datasetMean.data'))
-		UNet2D.DatasetStDev = loadData(pathjoin(modelPath, 'datasetStDev.data'))
+		if std == -1:
+			UNet2D.DatasetStDev = loadData(pathjoin(modelPath, 'datasetStDev.data'))
+		else:
+			UNet2D.DatasetStDev = std
 		print(UNet2D.DatasetMean)
 		print(UNet2D.DatasetStDev)
 
@@ -536,6 +543,8 @@ if __name__ == '__main__':
 	parser.add_argument("imagePath", help="path to the .tif file")
 	parser.add_argument("--outputPath", help="output path of probability map")
 	parser.add_argument("--channel", help="channel to perform inference on", type=int, default=0)
+	parser.add_argument("--mean", help="mean intensity of input image. Use -1 to use model", type=float, default=-1)
+	parser.add_argument("--std", help="mean standard deviation of input image. Use -1 to use model", type=float, default=-1)
 	parser.add_argument("--scalingFactor", help="factor by which to increase/decrease image size by", type=float,
 						default=1)
 	args = parser.parse_args()
@@ -544,14 +553,14 @@ if __name__ == '__main__':
 	scriptPath = os.path.dirname(os.path.realpath(__file__))
 	modelPath = os.path.join(scriptPath, 'TFModel - 3class 16 kernels 5ks 2 layers')
 	pmPath = ''
-	UNet2D.singleImageInferenceSetup(modelPath, 0)
+	UNet2D.singleImageInferenceSetup(modelPath, 0,args.mean,args.std)
 	imagePath = args.imagePath
 	dapiChannel = args.channel
 	dsFactor = args.scalingFactor
 	parentFolder = os.path.dirname(os.path.dirname(imagePath))
 	fileName = os.path.basename(imagePath)
 	fileNamePrefix = fileName.split(os.extsep, 1)
-	I = tifffile.imread(imagePath, key=dapiChannel)
+	I = skimage.io.imread(imagePath, key=dapiChannel)
 	rawI = I
 	hsize = int((float(I.shape[0]) * float(dsFactor)))
 	vsize = int((float(I.shape[1]) * float(dsFactor)))
@@ -573,11 +582,17 @@ if __name__ == '__main__':
 	tifwrite(np.uint8(255 * K),
 			 args.outputPath + '//' + fileNamePrefix[0] + '_ContoursPM_' + str(dapiChannel + 1) + '.tif')
 	del K
-	K = np.zeros((1, rawI.shape[0], rawI.shape[1]))
+	K = np.zeros((3, rawI.shape[0], rawI.shape[1]))
+	K[1, :, :] = contours
 	nuclei = UNet2D.singleImageInference(I, 'accumulate', 2)
 	nuclei = resize(nuclei, (rawI.shape[0], rawI.shape[1]))
-	K[0, :, :] = nuclei
-	tifwrite(np.uint8(255 * K),
+	tifwrite(np.uint8(255 * nuclei),
 			 args.outputPath + '//' + fileNamePrefix[0] + '_NucleiPM_' + str(dapiChannel + 1) + '.tif')
+	K[0, :, :] = nuclei
+	background = UNet2D.singleImageInference(I, 'accumulate', 0)
+	background = resize(background, (rawI.shape[0], rawI.shape[1]))
+	K[2, :, :] = background
+	tifwrite(np.uint8(255 * K),
+			 args.outputPath + '//' + fileNamePrefix[0] + '_Probabilities_' + str(dapiChannel + 1) + '.tif')
 	del K
 	UNet2D.singleImageInferenceCleanup()

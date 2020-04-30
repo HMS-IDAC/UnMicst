@@ -3,7 +3,7 @@ from scipy import misc
 import tensorflow as tf
 import shutil
 import scipy.io as sio
-import os,fnmatch,PIL,glob
+import os,fnmatch,glob
 import skimage.exposure as sk
 
 import sys
@@ -455,7 +455,7 @@ class UNet2D:
 		sess.close()
 
 	def singleImageInferenceSetup(modelPath,gpuIndex):
-		os.environ['CUDA_VISIBLE_DEVICES']= '%d' % gpuIndex
+		#os.environ['CUDA_VISIBLE_DEVICES']= '%d' % gpuIndex
 
 		variablesPath = pathjoin(modelPath,'model.ckpt')
 
@@ -488,7 +488,7 @@ class UNet2D:
 		nChannels = UNet2D.hp['nChannels']
 
 		PI2D.setup(image,imSize,int(imSize/8),mode)
-		PI2D.createOutput()
+		PI2D.createOutput(nChannels)
 
 		batchData = np.zeros((batchSize,imSize,imSize,nChannels))
 		for i in range(PI2D.NumPatches):
@@ -506,14 +506,14 @@ class UNet2D:
 
 if __name__ == '__main__':
 	logPath = 'C://Users//Clarence//Documents//UNet code//TFLogs'
-	modelPath = 'C://Users//Clarence//Documents//UNet code//TFModel - 3class 16 kernels 5ks 2 layers'
+	modelPath = 'D:\\LSP\\UNet\\tonsil20x1bin1chan\\TFModel - 3class 16 kernels 5ks 2 layers'
 	pmPath = 'C://Users//Clarence//Documents//UNet code//TFProbMaps'
 
 
 
 	UNet2D.singleImageInferenceSetup(modelPath, 0)
-	imagePath = 'Y://sorger//data//RareCyte//Clarence'
-	sampleList = glob.glob(imagePath + '//UNet sample data*')
+	imagePath = 'D:\\LSP\\cycif\\testsets'
+	sampleList = glob.glob(imagePath + '//exemplar-001*')
 	dapiChannel = 0
 	dsFactor = 1
 	for iSample in sampleList:
