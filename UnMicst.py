@@ -7,7 +7,8 @@ import os, fnmatch, PIL, glob
 import skimage.exposure as sk
 import skimage.io
 import argparse
-
+import czifile
+from nd2reader import ND2Reader
 import sys
 
 #sys.path.insert(0, 'C:\\Users\\Public\\Documents\\ImageScience')
@@ -541,6 +542,7 @@ class UNet2D:
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser()
 	parser.add_argument("imagePath", help="path to the .tif file")
+	parser.add_argument("--model",  help="type of model. For example, nuclei vs cytoplasm",default = 'nucleiDAPI')
 	parser.add_argument("--outputPath", help="output path of probability map")
 	parser.add_argument("--channel", help="channel to perform inference on", type=int, default=0)
 	parser.add_argument("--mean", help="mean intensity of input image. Use -1 to use model", type=float, default=-1)
@@ -551,16 +553,33 @@ if __name__ == '__main__':
 
 	logPath = ''
 	scriptPath = os.path.dirname(os.path.realpath(__file__))
-	modelPath = os.path.join(scriptPath, 'TFModel - 3class 16 kernels 5ks 2 layers')
+	modelPath = os.path.join(scriptPath, 'models', args.model)
+	# modelPath = os.path.join(scriptPath, 'models/cytoplasmINcell')
+	# modelPath = os.path.join(scriptPath, 'cytoplasmZeissNikon')
 	pmPath = ''
 	UNet2D.singleImageInferenceSetup(modelPath, 0,args.mean,args.std)
+	nClass = UNet2D.hp['nClasses']
 	imagePath = args.imagePath
 	dapiChannel = args.channel
 	dsFactor = args.scalingFactor
 	parentFolder = os.path.dirname(os.path.dirname(imagePath))
 	fileName = os.path.basename(imagePath)
 	fileNamePrefix = fileName.split(os.extsep, 1)
-	I = skimage.io.imread(imagePath, key=dapiChannel)
+	print(fileName)
+	fileType = fileNamePrefix[1]
+
+	if fileType=='ome.tif':
+		I = skio.imread(imagePath, img_num=dapiChannel,plugin='tifffile')
+	elif fileType == 'tif':
+		I = tifffile.imread(imagePath, key=dapiChannel)
+	elif fileType == 'czi':
+		with czifile.CziFile(imagePath) as czi:
+			image = czi.asarray()
+			I = image[0, 0, dapiChannel, 0, 0, :, :, 0]
+	elif fileType == 'nd2':
+		with ND2Reader(iFile) as fullStack:
+			I = fullStack[dapiChannel]
+
 	rawI = I
 	hsize = int((float(I.shape[0]) * float(dsFactor)))
 	vsize = int((float(I.shape[1]) * float(dsFactor)))
@@ -568,31 +587,30 @@ if __name__ == '__main__':
 	I = im2double(sk.rescale_intensity(I, in_range=(np.min(I), np.max(I)), out_range=(0, 0.983)))
 	rawI = im2double(rawI) / np.max(im2double(rawI))
 	if not args.outputPath:
-		args.outputPath = parentFolder + '//prob_maps'
+		args.outputPath = parentFolder + '//probability_maps'
 
 	if not os.path.exists(args.outputPath):
 		os.makedirs(args.outputPath)
-	K = np.zeros((2, rawI.shape[0], rawI.shape[1]))
-	contours = UNet2D.singleImageInference(I, 'accumulate', 1)
-	hsize = int((float(I.shape[0]) * float(1 / dsFactor)))
-	vsize = int((float(I.shape[1]) * float(1 / dsFactor)))
-	contours = resize(contours, (rawI.shape[0], rawI.shape[1]))
-	K[1, :, :] = rawI
-	K[0, :, :] = contours
-	tifwrite(np.uint8(255 * K),
-			 args.outputPath + '//' + fileNamePrefix[0] + '_ContoursPM_' + str(dapiChannel + 1) + '.tif')
-	del K
-	K = np.zeros((3, rawI.shape[0], rawI.shape[1]))
-	K[1, :, :] = contours
-	nuclei = UNet2D.singleImageInference(I, 'accumulate', 2)
-	nuclei = resize(nuclei, (rawI.shape[0], rawI.shape[1]))
-	tifwrite(np.uint8(255 * nuclei),
-			 args.outputPath + '//' + fileNamePrefix[0] + '_NucleiPM_' + str(dapiChannel + 1) + '.tif')
-	K[0, :, :] = nuclei
-	background = UNet2D.singleImageInference(I, 'accumulate', 0)
-	background = resize(background, (rawI.shape[0], rawI.shape[1]))
-	K[2, :, :] = background
+
+	K = np.zeros((nClass, rawI.shape[0], rawI.shape[1]))
+	for iClass in range(nClass):
+		PM = UNet2D.singleImageInference(I, 'accumulate', nClass-iClass-1) # backwards in order to align with ilastik...
+		K[iClass, :, :] = resize(PM, (rawI.shape[0], rawI.shape[1]))
 	tifwrite(np.uint8(255 * K),
 			 args.outputPath + '//' + fileNamePrefix[0] + '_Probabilities_' + str(dapiChannel + 1) + '.tif')
+
+	L = np.zeros((2, rawI.shape[0], rawI.shape[1]))
+	L[1, :, :] = rawI
+	L[0, :, :] = K[1,:,:]
+	tifwrite(np.uint8(255 * L),
+			 args.outputPath + '//' + fileNamePrefix[0] + '_PreviewPM_' + str(dapiChannel + 1) + '.tif')
+
+	del L
 	del K
+
 	UNet2D.singleImageInferenceCleanup()
+
+#aligned output files to reflect ilastik
+#outputting all classes as single file
+#handles multiple formats including tif, ome.tif, nd2, czi
+#selectable models (human nuclei, mouse nuclei, cytoplasm)

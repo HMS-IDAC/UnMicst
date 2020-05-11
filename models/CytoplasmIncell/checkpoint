@@ -1,0 +1,2 @@
+model_checkpoint_path: "D:\\Dan\\CytoplasmIncell\\model.ckpt"
+all_model_checkpoint_paths: "D:\\Dan\\CytoplasmIncell\\model.ckpt"

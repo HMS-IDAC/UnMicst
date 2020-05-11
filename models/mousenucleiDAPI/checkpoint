@@ -1,0 +1,2 @@
+model_checkpoint_path: "D:\\Olesja\\UNet\\nuclei20x2bin1chan 3layers ks3 bs16 20input\\model.ckpt"
+all_model_checkpoint_paths: "D:\\Olesja\\UNet\\nuclei20x2bin1chan 3layers ks3 bs16 20input\\model.ckpt"
