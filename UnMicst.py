@@ -6,10 +6,10 @@ import scipy.io as sio
 import os, fnmatch, PIL, glob
 import skimage.exposure as sk
 import skimage.io
-import skimage.external
 import argparse
 import czifile
 from nd2reader import ND2Reader
+import tifffile
 import sys
 
 #sys.path.insert(0, 'C:\\Users\\Public\\Documents\\ImageScience')
@@ -591,7 +591,6 @@ if __name__ == '__main__':
 	hsize = int((float(I.shape[0]) * float(dsFactor)))
 	vsize = int((float(I.shape[1]) * float(dsFactor)))
 	I = resize(I, (hsize, vsize))
-	print(type(I))
 	I = im2double(sk.rescale_intensity(I, in_range=(np.min(I), np.max(I)), out_range=(0, 0.983)))
 	rawI = im2double(rawI) / np.max(im2double(rawI))
 	if not args.outputPath:
