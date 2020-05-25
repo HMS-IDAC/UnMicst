@@ -599,22 +599,29 @@ if __name__ == '__main__':
 	if not os.path.exists(args.outputPath):
 		os.makedirs(args.outputPath)
 
+	append_kwargs = {
+		'bigtiff': True,
+		'metadata': None,
+		'append': True,
+	}
+	save_kwargs = {
+		'bigtiff': True,
+		'metadata': None,
+		'append': False,
+	}
 	if args.stackOutput:
 		slice=0
 		for iClass in args.classOrder[::-1]:
 			PM = UNet2D.singleImageInference(I, 'accumulate', iClass) # backwards in order to align with ilastik...
 			PM = resize(PM, (rawI.shape[0], rawI.shape[1]))
 			if slice==0:
-				with tifffile.TiffWriter(args.outputPath + '//' + fileNamePrefix[0] + '_Probabilities_' + str(dapiChannel + 1) + '.tif',bigtiff=True) as tif:
-					tif.save( np.uint8(255 * PM))
+				skimage.io.imsave(args.outputPath + '//' + fileNamePrefix[0] + '_Probabilities_' + str(dapiChannel + 1) + '.tif', np.uint8(255 * PM),**save_kwargs)
 			else:
-				with tifffile.TiffWriter(args.outputPath + '//' + fileNamePrefix[0] + '_Probabilities_' + str(dapiChannel + 1) + '.tif',bigtiff=True, append=True) as tif:
-					tif.save( np.uint8(255 * PM))
+				skimage.io.imsave(args.outputPath + '//' + fileNamePrefix[0] + '_Probabilities_' + str(dapiChannel + 1) + '.tif',np.uint8(255 * PM),**append_kwargs)
 			if slice==1:
-				with tifffile.TiffWriter(args.outputPath + '//' + fileNamePrefix[0] + '_Preview_' + str(dapiChannel + 1) + '.tif',bigtiff=True) as tif:
-					tif.save( np.uint8(255 * PM))
-				with tifffile.TiffWriter(args.outputPath + '//' + fileNamePrefix[0] + '_Preview_' + str(dapiChannel + 1) + '.tif',bigtiff=True,append=True) as tif:
-					tif.save( np.uint8(255 * rawI))
+				save_kwargs['append'] = False
+				skimage.io.imsave(args.outputPath + '//' + fileNamePrefix[0] + '_Preview_' + str(dapiChannel + 1) + '.tif',	np.uint8(255 * PM), **save_kwargs)
+				skimage.io.imsave(args.outputPath + '//' + fileNamePrefix[0] + '_Preview_' + str(dapiChannel + 1) + '.tif', np.uint8(255 * rawI), **append_kwargs)
 			slice = slice + 1
 
 	else:
@@ -622,15 +629,12 @@ if __name__ == '__main__':
 		hsize = int((float(I.shape[0]) * float(1 / dsFactor)))
 		vsize = int((float(I.shape[1]) * float(1 / dsFactor)))
 		contours = resize(contours, (rawI.shape[0], rawI.shape[1]))
-		with tifffile.TiffWriter(args.outputPath + '//' + fileNamePrefix[0] + '_ContoursPM_' + str(dapiChannel + 1) + '.tif', bigtiff=True) as tif:
-			tif.save(np.uint8(255 * contours))
-		with tifffile.TiffWriter(args.outputPath + '//' + fileNamePrefix[0] + '_ContoursPM_' + str(dapiChannel + 1) + '.tif', bigtiff=True,append=True) as tif:
-			tif.save(np.uint8(255 * rawI))
+		skimage.io.imsave(args.outputPath + '//' + fileNamePrefix[0] + '_ContoursPM_' + str(dapiChannel + 1) + '.tif',np.uint8(255 * contours),**save_kwargs)
+		skimage.io.imsave(args.outputPath + '//' + fileNamePrefix[0] + '_ContoursPM_' + str(dapiChannel + 1) + '.tif',np.uint8(255 * rawI), **append_kwargs)
 		del contours
 		nuclei = UNet2D.singleImageInference(I, 'accumulate', args.classOrder[2])
 		nuclei = resize(nuclei, (rawI.shape[0], rawI.shape[1]))
-		with tifffile.TiffWriter(args.outputPath + '//' + fileNamePrefix[0] + '_NucleiPM_' + str(dapiChannel + 1) + '.tif', bigtiff=True) as tif:
-			tif.save(np.uint8(255 * nuclei))
+		skimage.io.imsave(args.outputPath + '//' + fileNamePrefix[0] + '_NucleiPM_' + str(dapiChannel + 1) + '.tif',np.uint8(255 * nuclei), **save_kwargs)
 		del nuclei
 	UNet2D.singleImageInferenceCleanup()
 
