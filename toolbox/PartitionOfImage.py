@@ -83,11 +83,11 @@ class PI2D:
 
     def createOutput(nChannels):
         if nChannels == 1:
-            PI2D.Output = np.zeros((PI2D.NRPI,PI2D.NCPI))
+            PI2D.Output = np.zeros((PI2D.NRPI,PI2D.NCPI),np.float16)
         else:
-            PI2D.Output = np.zeros((nChannels,PI2D.NRPI,PI2D.NCPI))
+            PI2D.Output = np.zeros((nChannels,PI2D.NRPI,PI2D.NCPI),np.float16)
         if PI2D.Mode == 'accumulate':
-            PI2D.Count = np.zeros((PI2D.NRPI,PI2D.NCPI))
+            PI2D.Count = np.zeros((PI2D.NRPI,PI2D.NCPI),np.float16)
 
     def patchOutput(i,P):
         r0,r1,c0,c1 = PI2D.PC[i]
