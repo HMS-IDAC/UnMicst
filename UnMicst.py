@@ -17,7 +17,7 @@ tf.disable_v2_behavior()
 from toolbox.imtools import *
 from toolbox.ftools import *
 from toolbox.PartitionOfImage import PI2D
-
+from toolbox import GPUselect
 
 def concat3(lst):
 	return tf.concat(lst, 3)
@@ -484,8 +484,6 @@ class UNet2D:
 		sess.close()
 
 	def singleImageInferenceSetup(modelPath, gpuIndex,mean,std):
-		os.environ['CUDA_VISIBLE_DEVICES'] = '%d' % gpuIndex
-
 		variablesPath = pathjoin(modelPath, 'model.ckpt')
 
 		hp = loadData(pathjoin(modelPath, 'hp.data'))
@@ -507,8 +505,8 @@ class UNet2D:
 		# --------------------------------------------------
 
 		saver = tf.train.Saver()
-		UNet2D.Session = tf.Session(config=tf.ConfigProto(
-			allow_soft_placement=True))  # config parameter needed to save variables when using GPU
+		UNet2D.Session = tf.Session(config=tf.ConfigProto())
+			# allow_soft_placement=True))  # config parameter needed to save variables when using GPU
 
 		saver.restore(UNet2D.Session, variablesPath)
 		print("Model restored.")
@@ -552,6 +550,7 @@ if __name__ == '__main__':
 	parser.add_argument("--scalingFactor", help="factor by which to increase/decrease image size by", type=float,
 						default=1)
 	parser.add_argument("--stackOutput", help="save probability maps as separate files", action='store_true')
+	parser.add_argument("--GPU", help="explicitly select GPU", type=int, default = -1)
 	args = parser.parse_args()
 
 	logPath = ''
@@ -560,7 +559,27 @@ if __name__ == '__main__':
 	# modelPath = os.path.join(scriptPath, 'models/cytoplasmINcell')
 	# modelPath = os.path.join(scriptPath, 'cytoplasmZeissNikon')
 	pmPath = ''
-	UNet2D.singleImageInferenceSetup(modelPath, 1,args.mean,args.std)
+
+	if os.system('nvidia-smi') == 0:
+		if args.GPU == -1:
+			print("automatically choosing GPU")
+			GPU = GPUselect.pick_gpu_lowest_memory()
+		else:
+			GPU = args.GPU
+		print('Using GPU ' + str(GPU))
+
+	else:
+		if sys.platform == 'win32':  # only 1 gpu on windows
+			if args.GPU==-1:
+				GPU = 0
+			else:
+				GPU = args.GPU
+			print('Using GPU ' + str(GPU))
+		else:
+			GPU=0
+			print('Using CPU')
+	os.environ['CUDA_VISIBLE_DEVICES'] = '%d' % GPU
+	UNet2D.singleImageInferenceSetup(modelPath, GPU,args.mean,args.std)
 	nClass = UNet2D.hp['nClasses']
 	imagePath = args.imagePath
 	dapiChannel = args.channel
