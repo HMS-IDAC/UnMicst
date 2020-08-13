@@ -1,0 +1,2 @@
+model_checkpoint_path: "/home/cy101/files/CellBiology/IDAC/Clarence/LSP/UNet models/LPTCdapilamin5-36/model.ckpt"
+all_model_checkpoint_paths: "/home/cy101/files/CellBiology/IDAC/Clarence/LSP/UNet models/LPTCdapilamin5-36/model.ckpt"
