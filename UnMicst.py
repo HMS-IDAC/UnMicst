@@ -1,6 +1,6 @@
 import numpy as np
 from scipy import misc
-import tensorflow as tf#import tensorflow.compat.v1 as tf
+import tensorflow.compat.v1 as tf
 import shutil
 import scipy.io as sio
 import os, fnmatch, glob
@@ -11,7 +11,7 @@ import czifile
 from nd2reader import ND2Reader
 import tifffile
 import sys
-# tf.disable_v2_behavior()
+tf.disable_v2_behavior()
 #sys.path.insert(0, 'C:\\Users\\Public\\Documents\\ImageScience')
 
 from toolbox.imtools import *
@@ -599,7 +599,7 @@ if __name__ == '__main__':
 			image = czi.asarray()
 			I = image[0, 0, dapiChannel, 0, 0, :, :, 0]
 	elif fileType == 'nd2':
-		with ND2Reader(iFile) as fullStack:
+		with ND2Reader(imagePath) as fullStack:
 			I = fullStack[dapiChannel]
 
 	if args.classOrder == -1:
