@@ -708,7 +708,7 @@ if __name__ == '__main__':
 	# modelPath = os.path.join(scriptPath, 'models/cytoplasmINcell')
 	# modelPath = os.path.join(scriptPath, 'cytoplasmZeissNikon')
 	pmPath = ''
-
+	print('Finished loading libraries')
 	if os.system('nvidia-smi') == 0:
 		if args.GPU == -1:
 			print("automatically choosing GPU")
@@ -721,6 +721,7 @@ if __name__ == '__main__':
 		if sys.platform == 'win32':  # only 1 gpu on windows
 			if args.GPU==-1:
 				GPU = 0
+				print('using default GPU')
 			else:
 				GPU = args.GPU
 			print('Using GPU ' + str(GPU))
@@ -728,6 +729,7 @@ if __name__ == '__main__':
 			GPU=0
 			print('Using CPU')
 	os.environ['CUDA_VISIBLE_DEVICES'] = '%d' % GPU
+	print('done setting GPU to ' + '%d' % GPU)
 	UNet2D.singleImageInferenceSetup(modelPath, GPU,args.mean,args.std)
 	nClass = UNet2D.hp['nClasses']
 	imagePath = args.imagePath

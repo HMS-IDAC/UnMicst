@@ -5,6 +5,7 @@ import subprocess, re
 
 def run_command(cmd):
     """Run command, return output as string."""
+    print('inspecting GPUs')
     output = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True).communicate()[0]
     return output.decode("ascii")
 
@@ -18,13 +19,16 @@ def list_available_gpus():
         m = gpu_regex.match(line)
         assert m, "Couldnt parse "+line
         result.append(int(m.group("gpu_id")))
+    print('done listing GPUs')
     return result
 
 def gpu_memory_map():
     """Returns map of GPU id to memory allocated on that GPU."""
 
     output = run_command("nvidia-smi")
+    print('looking GPU memory')
     gpu_output = output[output.find("GPU Memory"):]
+    print('found GPU memory')
     # lines of the form
     # |    0      8734    C   python                                       11705MiB |
     memory_regex = re.compile(r"[|]\s+?(?P<gpu_id>\d+)\D+?(?P<pid>\d+).+[ ](?P<gpu_memory>\d+)MiB")
