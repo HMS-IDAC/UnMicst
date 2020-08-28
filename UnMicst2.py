@@ -708,7 +708,6 @@ if __name__ == '__main__':
 	# modelPath = os.path.join(scriptPath, 'models/cytoplasmINcell')
 	# modelPath = os.path.join(scriptPath, 'cytoplasmZeissNikon')
 	pmPath = ''
-	print('Finished loading libraries')
 	if os.system('nvidia-smi') == 0:
 		if args.GPU == -1:
 			print("automatically choosing GPU")
@@ -729,7 +728,6 @@ if __name__ == '__main__':
 			GPU=0
 			print('Using CPU')
 	os.environ['CUDA_VISIBLE_DEVICES'] = '%d' % GPU
-	print('done setting GPU to ' + '%d' % GPU)
 	UNet2D.singleImageInferenceSetup(modelPath, GPU,args.mean,args.std)
 	nClass = UNet2D.hp['nClasses']
 	imagePath = args.imagePath
@@ -738,7 +736,7 @@ if __name__ == '__main__':
 		channel = [dapiChannel, dapiChannel]
 	else:
 		channel = args.channel
-	print ('Using channels ' + channel[0] + ' and ' + channel[1])
+	print ('Using channels ' + str(channel[0]) + ' and ' + str(channel[1]))
 	dsFactor = args.scalingFactor
 	parentFolder = os.path.dirname(os.path.dirname(imagePath))
 	fileName = os.path.basename(imagePath)

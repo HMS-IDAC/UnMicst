@@ -708,7 +708,6 @@ if __name__ == '__main__':
 	# modelPath = os.path.join(scriptPath, 'models/cytoplasmINcell')
 	# modelPath = os.path.join(scriptPath, 'cytoplasmZeissNikon')
 	pmPath = ''
-	print('Finished loading libraries')
 	if os.system('nvidia-smi') == 0:
 		if args.GPU == -1:
 			print("automatically choosing GPU")
@@ -729,7 +728,6 @@ if __name__ == '__main__':
 			GPU=0
 			print('Using CPU')
 	os.environ['CUDA_VISIBLE_DEVICES'] = '%d' % GPU
-	print('done setting GPU to ' + '%d' % GPU)
 	UNet2D.singleImageInferenceSetup(modelPath, GPU,args.mean,args.std)
 	nClass = UNet2D.hp['nClasses']
 	imagePath = args.imagePath
@@ -738,7 +736,7 @@ if __name__ == '__main__':
 		channel = [dapiChannel, dapiChannel]
 	else:
 		channel = args.channel
-	print ('Using channels ' + channel[0] + ' and ' + channel[1])
+	print ('Using channels ' + str(channel[0]) + ' and ' + str(channel[1]))
 	dsFactor = args.scalingFactor
 	parentFolder = os.path.dirname(os.path.dirname(imagePath))
 	fileName = os.path.basename(imagePath)
@@ -790,12 +788,9 @@ if __name__ == '__main__':
 		slice=0
 		for iClass in args.classOrder[::-1]:
 			PM = np.uint8(255*UNet2D.singleImageInference(cells, 'accumulate', iClass)) # backwards in order to align with ilastik...
-			print('generated a PM')
 			PM = resize(PM, (rawI.shape[0], rawI.shape[1]))
 			if slice==0:
-				print('about to save')
 				skimage.io.imsave(args.outputPath + '//' + fileNamePrefix[0] + '_Probabilities_' + str(dapiChannel) + '.tif', np.uint8(255 * PM),**save_kwargs)
-				print('saved')
 			else:
 				skimage.io.imsave(args.outputPath + '//' + fileNamePrefix[0] + '_Probabilities_' + str(dapiChannel) + '.tif',np.uint8(255 * PM),**append_kwargs)
 			if slice==1:
