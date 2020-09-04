@@ -18,9 +18,9 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
 
-    scriptPath ="app"
+    scriptPath =os.path.dirname(os.path.realpath(__file__))
 
-cmd="python " + os.sep + scriptPath + os.sep
+cmd="python " + scriptPath + os.sep
 
 channel = args.channel
 
