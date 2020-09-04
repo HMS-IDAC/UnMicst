@@ -18,24 +18,23 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
 
-    scriptPath = os.path.dirname(os.path.realpath(__file__))
+    scriptPath = os.getcwd()
 
-
-cmd="python"
+cmd="python " + scriptPath + os.sep
 
 channel = args.channel
 
 if args.tool == 'UnMicst2':
-    cmd = cmd +  " UnMicst2.py "
+    cmd = cmd +  "UnMicst2.py "
     if len(args.channel)==2:
         channel = str(channel[0]) +" " + str(channel[1])
     else:
         channel = str(channel[0])
 elif args.tool == 'UnMicst3':
-    cmd = cmd + " UnMicst3.py "
+    cmd = cmd + "UnMicst3.py "
     channel = str(channel[0])
 else:
-    cmd = cmd + " UnMicst.py "
+    cmd = cmd + "UnMicst.py "
     channel = str(channel[0])
 
 
