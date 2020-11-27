@@ -727,7 +727,7 @@ if __name__ == '__main__':
 		else:
 			GPU=0
 			print('Using CPU')
-	os.environ['CUDA_VISIBLE_DEVICES'] = '%d' % GPU
+	# os.environ['CUDA_VISIBLE_DEVICES'] = '%d' % GPU
 	UNet2D.singleImageInferenceSetup(modelPath, GPU,args.mean,args.std)
 	nClass = UNet2D.hp['nClasses']
 	imagePath = args.imagePath

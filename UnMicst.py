@@ -551,6 +551,9 @@ if __name__ == '__main__':
 						default=1)
 	parser.add_argument("--stackOutput", help="save probability maps as separate files", action='store_true')
 	parser.add_argument("--GPU", help="explicitly select GPU", type=int, default = -1)
+	parser.add_argument("--outlier",
+						help="map percentile intensity to max when rescaling intensity values. Max intensity as default",
+						type=float, default=-1)
 	args = parser.parse_args()
 
 	logPath = ''
@@ -610,7 +613,11 @@ if __name__ == '__main__':
 	hsize = int((float(I.shape[0]) * float(dsFactor)))
 	vsize = int((float(I.shape[1]) * float(dsFactor)))
 	I = resize(I, (hsize, vsize))
-	I = im2double(sk.rescale_intensity(I, in_range=(np.min(I), np.max(I)), out_range=(0, 0.983)))
+	if args.outlier == -1:
+		maxLimit = np.max(I)
+	else:
+		maxLimit = np.percentile(I, args.outlier)
+	I = im2double(sk.rescale_intensity(I, in_range=(np.min(I), maxLimit), out_range=(0, 0.983)))
 	rawI = im2double(rawI) / np.max(im2double(rawI))
 	if not args.outputPath:
 		args.outputPath = parentFolder + '//probability_maps'

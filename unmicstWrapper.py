@@ -15,6 +15,9 @@ if __name__ == '__main__':
                         default=1)
     parser.add_argument("--stackOutput", help="save probability maps as separate files", action='store_true')
     parser.add_argument("--GPU", help="explicitly select GPU", type=int, default = -1)
+    parser.add_argument("--outlier",
+                        help="map percentile intensity to max when rescaling intensity values. Max intensity as default",
+                        type=float, default=-1)
     args = parser.parse_args()
 
 
@@ -45,6 +48,7 @@ cmd = cmd + " --mean " + str(args.mean)
 cmd = cmd + " --std " + str(args.std)
 cmd = cmd + " --scalingFactor " + str(args.scalingFactor)
 cmd = cmd + " --GPU " + str(args.GPU)
+cmd = cmd + " --outlier " + str(args.outlier)
 
 if args.stackOutput:
     cmd = cmd + " --stackOutput "
