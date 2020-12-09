@@ -1,0 +1,2 @@
+model_checkpoint_path: "D:\\LSP\\UNet\\TuuliaLPTBdapiTFv2\\model.ckpt"
+all_model_checkpoint_paths: "D:\\LSP\\UNet\\TuuliaLPTBdapiTFv2\\model.ckpt"

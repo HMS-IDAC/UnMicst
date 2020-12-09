@@ -33,8 +33,8 @@ if args.tool == 'UnMicst2':
         channel = str(channel[0]) +" " + str(channel[1])
     else:
         channel = str(channel[0])
-elif args.tool == 'UnMicst3':
-    cmd = cmd + "UnMicst3.py "
+elif args.tool == 'UnMicst1-5':
+    cmd = cmd + "UnMicst1-5.py "
     channel = str(channel[0])
 else:
     cmd = cmd + "UnMicst.py "
