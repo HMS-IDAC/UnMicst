@@ -707,7 +707,7 @@ class UNet2D:
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser()
 	parser.add_argument("imagePath", help="path to the .tif file")
-	parser.add_argument("--model", help="type of model. For example, nuclei vs cytoplasm", default='nucleiDAPILAMIN')
+	parser.add_argument("--model", help="type of model. For example, nuclei vs cytoplasm", default='nucleiDAPI1-5')
 	parser.add_argument("--outputPath", help="output path of probability map")
 	parser.add_argument("--channel", help="channel to perform inference on", nargs='+', default=[0])
 	# parser.add_argument("--channel2", help="channel2 to perform inference on", type=int, default=-1)
