@@ -5,7 +5,7 @@ from tensorflow import keras
 from tensorflow.keras import layers
 import shutil
 import scipy.io as sio
-import os, fnmatch, glob, cv2
+import os, fnmatch, glob
 import skimage.exposure as sk
 import skimage.io
 import argparse
