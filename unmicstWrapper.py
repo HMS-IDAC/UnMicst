@@ -36,6 +36,9 @@ if args.tool == 'UnMicst2':
 elif args.tool == 'UnMicst1-5':
     cmd = cmd + "UnMicst1-5.py "
     channel = str(channel[0])
+elif args.tool == 'UnMicstCyto2':
+    cmd = cmd + "UnMicstCyto2.py "
+    channel = str(channel[0])
 else:
     cmd = cmd + "UnMicst.py "
     channel = str(channel[0])
