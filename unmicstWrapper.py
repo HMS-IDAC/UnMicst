@@ -3,7 +3,7 @@ import os, argparse
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument("--tool", help="which UnMicst tool?", default = 'UnMicst')
+    parser.add_argument("--tool", help="which UnMicst tool?", default = 'UnMicst1-5')
     parser.add_argument("imagePath", help="path to the .tif file")
     parser.add_argument("--model",  help="type of model. For example, nuclei vs cytoplasm")
     parser.add_argument("--outputPath", help="output path of probability map")
@@ -33,15 +33,18 @@ if args.tool == 'UnMicst2':
         channel = str(channel[0]) +" " + str(channel[1])
     else:
         channel = str(channel[0])
-elif args.tool == 'UnMicst1-5':
-    cmd = cmd + "UnMicst1-5.py "
+elif args.tool == 'UnMicst':
+    cmd = cmd + "UnMicst.py "
     channel = str(channel[0])
+    print("WARNING! YOU HAVE OPTED TO USE UNMICST V1, WHICH IS GETTING TIRED AND OLD. CONSIDERING USING V1.5 OR V2(IF YOU ALSO HAVE A NUCLEAR ENVELOPE STAIN")
 elif args.tool == 'UnMicstCyto2':
     cmd = cmd + "UnMicstCyto2.py "
     channel = str(channel[0])
 else:
-    cmd = cmd + "UnMicst.py "
+    cmd = cmd + "UnMicst1-5.py "
     channel = str(channel[0])
+    print(
+        "WARNING! USING V1.5 AS DEFAULT. THIS MODEL HAS BEEN TRAINED ON MORE TISSUE TYPES. IF YOU WANT V1, USE --tool UnMicst")
 
 
 cmd = cmd + " " + args.imagePath
