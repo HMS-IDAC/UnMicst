@@ -1,9 +1,13 @@
 import numpy as np
 from scipy import misc
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+import logging
+logging.getLogger('tensorflow').setLevel(logging.FATAL)
 import tensorflow.compat.v1 as tf
 import shutil
 import scipy.io as sio
-import os, fnmatch, glob
+import fnmatch, glob
 import skimage.exposure as sk
 import skimage.io
 import argparse
@@ -590,7 +594,7 @@ if __name__ == '__main__':
 	parentFolder = os.path.dirname(os.path.dirname(imagePath))
 	fileName = os.path.basename(imagePath)
 	fileNamePrefix = fileName.split(os.extsep, 1)
-	print(fileName)
+	# print(fileName)
 	fileType = fileNamePrefix[1]
 
 	if fileType=='ome.tif' or fileType == 'btf' :
@@ -609,7 +613,7 @@ if __name__ == '__main__':
 		args.classOrder = range(nClass)
 
 	rawI = I
-	print(type(I))
+	# print(type(I))
 	hsize = int((float(I.shape[0]) * float(dsFactor)))
 	vsize = int((float(I.shape[1]) * float(dsFactor)))
 	I = resize(I, (hsize, vsize))

@@ -23,6 +23,7 @@ if __name__ == '__main__':
 
     scriptPath =os.path.dirname(os.path.realpath(__file__))
 
+
 cmd="python " + scriptPath + os.sep
 
 channel = args.channel
@@ -36,16 +37,19 @@ if args.tool == 'UnMicst2':
 elif args.tool == 'UnMicst':
     cmd = cmd + "UnMicst.py "
     channel = str(channel[0])
-    print("WARNING! YOU HAVE OPTED TO USE UNMICST V1, WHICH IS GETTING TIRED AND OLD. CONSIDERING USING V1.5 OR V2(IF YOU ALSO HAVE A NUCLEAR ENVELOPE STAIN")
+    print('')
+    print("WARNING! YOU HAVE OPTED TO USE UNMICST V1, WHICH IS GETTING TIRED AND OLD. CONSIDER USING V1.5 OR V2(IF YOU ALSO HAVE A NUCLEAR ENVELOPE STAIN")
+    print('')
 elif args.tool == 'UnMicstCyto2':
     cmd = cmd + "UnMicstCyto2.py "
     channel = str(channel[0])
 else:
     cmd = cmd + "UnMicst1-5.py "
     channel = str(channel[0])
+    print('')
     print(
         "WARNING! USING V1.5 AS DEFAULT. THIS MODEL HAS BEEN TRAINED ON MORE TISSUE TYPES. IF YOU WANT V1, USE --tool UnMicst")
-
+    print('')
 
 cmd = cmd + " " + args.imagePath
 cmd = cmd + " --channel " + str(channel)
