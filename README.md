@@ -8,11 +8,14 @@ Nuclei segmentation, especially for tissues, is a challenging and unsolved probl
 ![](/images/TMA.png)
 **Training data can be found here: https://www.synapse.org/#!Synapse:syn24192218/files/ and includes:**
 - training images from 7 tissue types that appeared to encapsulate the different morphologies of the entire tissue microarray: 1) lung adenocarcinoma, 2) non-neoplastic prostate, 3) non-neoplastic small intestine, 4) non-neoplastic ovary, 5) tonsil, 6) glioblastoma, and 7) colon adenocarcinoma. 
-- manual annotations of the nuclei centers, contours, and background of the abovementioned tissue types
-- DNA channel and nuclear envelope staining (lamin B and nucleoporin 98) for improved accuracy
-![](/images/annotationsmonatge.png)
-- intentionally defocused planes and saturated pixels for better dealing with real-world artefacts
-![](/images/real augmentations.png)
+- manual annotations of the nuclei centers, contours, and background of the abovementioned tissue types<br>
+- DNA channel and nuclear envelope staining (lamin B and nucleoporin 98) for improved accuracy<br>
+
+![](/images/annotationsmonatge.png)<br>
+
+- intentionally defocused planes and saturated pixels for better dealing with real-world artefacts<br>
+
+![](/images/real augmentations.png)<br>
 **The training data is publicly available under creative commons license for expansion or training newer models.**
 
 
