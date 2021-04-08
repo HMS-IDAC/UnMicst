@@ -1,4 +1,5 @@
 # UnMICST - UNet Model for Identifying Cells and Segmenting Tissue <br>
+![](/images/unmicstbannerv2.png)
 *(pronounced un-mixed)* <br>
 
 ## Introduction
