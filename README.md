@@ -10,9 +10,9 @@ Nuclei segmentation, especially for tissues, is a challenging and unsolved probl
 - training images from 7 tissue types that appeared to encapsulate the different morphologies of the entire tissue microarray: 1) lung adenocarcinoma, 2) non-neoplastic prostate, 3) non-neoplastic small intestine, 4) non-neoplastic ovary, 5) tonsil, 6) glioblastoma, and 7) colon adenocarcinoma. 
 - manual annotations of the nuclei centers, contours, and background of the abovementioned tissue types
 - DNA channel and nuclear envelope staining (lamin B and nucleoporin 98) for improved accuracy
-![](/images/annotationsmontage.png)
+![](/images/annotationsmonatge.png)
 - intentionally defocused planes and saturated pixels for better dealing with real-world artefacts
-![](/images/realaugmentations.png)
+![](/images/real augmentations.png)
 **The training data is publicly available under creative commons license for expansion or training newer models.**
 
 
