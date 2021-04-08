@@ -16,11 +16,11 @@ Nuclei segmentation, especially for tissues, is a challenging and unsolved probl
 - DNA channel and nuclear envelope staining (lamin B and nucleoporin 98) for improved accuracy<br>
 
 
-![](/images/annotationsmontagev2.png)
+![](/images/annotationsmontagev2.png)<br>
 *nuclear envelope stain (left), DNA stain (center), manual annotations for nuclei contours, centers and background (right)*<br>
 
 - intentionally defocused planes and saturated pixels for better dealing with real-world artefacts<br>
-![](/images/realaugmentations.png)
+![](/images/realaugmentations.png)<br>
 *additional z-planes above and below the focal plane were acquired in widefield microscopy and included in the training as part of "real" augmentation as opposed to Gaussian blurring, which is less effective*<br>
 
 **The training data is publicly available under creative commons license for expansion or training newer models.**
