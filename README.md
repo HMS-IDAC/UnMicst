@@ -5,17 +5,17 @@
 Nuclei segmentation, especially for tissues, is a challenging and unsolved problem. Convolutional neural networks are particularly well-suited for this task - classifying image pixels into nuclei centers, nuclei contours and background. UnMICST generates probability maps where the intensity at each pixel defines how confident the pixel has been correctly classified to the aforementioned classes. These maps that can make downstream image binarization more accurate using tools such as s3segmenter. https://github.com/HMS-IDAC/S3segmenter. UnMICST currently uses the UNet architecture but Mask R-CNN and Pyramid Scene Parsing (PSP)Net are coming very soon!
 ![](/images/probmaps.png)
 ## Training data / annotations
-![](/images/TMA.png)
+![](/images/TMAv2.png)
 **Training data can be found here: https://www.synapse.org/#!Synapse:syn24192218/files/ and includes:**
 - training images from 7 tissue types that appeared to encapsulate the different morphologies of the entire tissue microarray: 1) lung adenocarcinoma, 2) non-neoplastic prostate, 3) non-neoplastic small intestine, 4) non-neoplastic ovary, 5) tonsil, 6) glioblastoma, and 7) colon adenocarcinoma. 
 - manual annotations of the nuclei centers, contours, and background of the abovementioned tissue types<br>
 - DNA channel and nuclear envelope staining (lamin B and nucleoporin 98) for improved accuracy<br>
 
-![](/images/annotationsmonatge.png)<br>
+![](/images/annotationsmontagev2.png)<br>
 
 - intentionally defocused planes and saturated pixels for better dealing with real-world artefacts<br>
 
-![](/images/real augmentations.png)<br>
+![](/images/realaugmentations.png)<br>
 **The training data is publicly available under creative commons license for expansion or training newer models.**
 
 
