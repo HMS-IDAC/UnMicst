@@ -1,9 +1,12 @@
 # UnMICST - UNet Model for Identifying Cells and Segmenting Tissue <br>
-![](/images/unmicstbannerv2.png)
-*(pronounced un-mixed)* <br>
+![](/images/unmicstbannerv2.png) <br>
+<p align="center"> 
+  (pronounced un-mixed)
+</p>
 
 ## Introduction
-Nuclei segmentation, especially for tissues, is a challenging and unsolved problem. Convolutional neural networks are particularly well-suited for this task - classifying image pixels into nuclei centers, nuclei contours and background. UnMICST generates probability maps where the intensity at each pixel defines how confident the pixel has been correctly classified to the aforementioned classes. These maps that can make downstream image binarization more accurate using tools such as s3segmenter. https://github.com/HMS-IDAC/S3segmenter. UnMICST currently uses the UNet architecture but Mask R-CNN and Pyramid Scene Parsing (PSP)Net are coming very soon!
+Nuclei segmentation, especially for tissues, is a challenging and unsolved problem. Convolutional neural networks are particularly well-suited for this task: classifying image pixels into nuclei centers, nuclei contours and background. UnMICST generates probability maps where the intensity at each pixel defines how confident the pixel has been correctly classified to the aforementioned classes. These maps that can make downstream image binarization more accurate using tools such as s3segmenter. https://github.com/HMS-IDAC/S3segmenter. UnMICST currently uses the UNet architecture (Ronneberger et al., 2015) but Mask R-CNN and Pyramid Scene Parsing (PSP)Net are coming very soon! The concept, models, and training data are features here: https://www.biorxiv.org/content/10.1101/2021.04.02.438285v1
+
 ![](/images/probmaps.png)
 ## Training data / annotations
 ![](/images/TMAv2.png)
@@ -61,5 +64,7 @@ root@0ea0cdc46c8f:/# python app/UnMicst.py /data/input/my.tif --outputPath /data
 
 
 **References:** <br/>
-S Saka, Y Wang, J Kishi, A Zhu, Y Zeng, W Xie, K Kirli, C Yapp, M Cicconet, BJ Beliveau, SW Lapan, S Yin, M Lin, E Boyde, PS Kaeser, G Pihan, GM Church, P Yin, Highly multiplexed in situ protein imaging with signal amplification by Immuno-SABER, Nat Biotechnology (accepted)
+Clarence Yapp, Edward Novikov, Won-Dong Jang, Yu-An Chen, Marcelo Cicconet, Zoltan Maliga, Connor A. Jacobson, Donglai Wei, Sandro Santagata, Hanspeter Pfister, Peter K. Sorger, 2021, UnMICST: Deep learning with real augmentation for robust segmentation of highly multiplexed images of human tissues
+
+S Saka, Y Wang, J Kishi, A Zhu, Y Zeng, W Xie, K Kirli, C Yapp, M Cicconet, BJ Beliveau, SW Lapan, S Yin, M Lin, E Boyde, PS Kaeser, G Pihan, GM Church, P Yin, 2020, Highly multiplexed in situ protein imaging with signal amplification by Immuno-SABER, Nat Biotechnology 
 
