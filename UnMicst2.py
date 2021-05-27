@@ -751,7 +751,7 @@ if __name__ == '__main__':
     fileType = fileNamePrefix[1]
 
     for iChan in range(len(channel)):
-        if fileType=='ome.tif' or fileType == 'btf' :
+        if fileType=='ome.tif' or fileType=='ome.tiff' or fileType == 'btf' :
             I = skio.imread(imagePath, img_num=int(channel[iChan]),plugin='tifffile')
         elif fileType == 'tif' :
             I = tifffile.imread(imagePath, key=int(channel[iChan]))
@@ -762,6 +762,8 @@ if __name__ == '__main__':
         elif fileType == 'nd2':
             with ND2Reader(imagePath) as fullStack:
                 I = fullStack[int(channel[iChan])]
+        if I.dtype == 'float32':
+            I = np.uint16(I)
         rawVert = I.shape[0]
         rawHorz = I.shape[1]
         rawI = I

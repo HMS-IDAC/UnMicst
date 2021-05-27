@@ -597,7 +597,7 @@ if __name__ == '__main__':
 	# print(fileName)
 	fileType = fileNamePrefix[1]
 
-	if fileType=='ome.tif' or fileType == 'btf' :
+	if fileType=='ome.tif' or fileType=='ome.tiff' or fileType == 'btf' :
 		I = skio.imread(imagePath, img_num=dapiChannel,plugin='tifffile')
 	elif fileType == 'tif' :
 		I = tifffile.imread(imagePath, key=dapiChannel)
@@ -608,7 +608,8 @@ if __name__ == '__main__':
 	elif fileType == 'nd2':
 		with ND2Reader(imagePath) as fullStack:
 			I = fullStack[dapiChannel]
-
+	if I.dtype == 'float32':
+		I=np.uint16(I)
 	if args.classOrder == -1:
 		args.classOrder = range(nClass)
 
