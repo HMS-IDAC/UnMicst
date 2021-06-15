@@ -42,18 +42,18 @@ Nuclei segmentation, especially for tissues, is a challenging and unsolved probl
 
 **Running as a Docker container**
 
-The docker image is distributed through Dockerhub and includes `UnMicst` with all of its dependencies. Parallel images with and without gpu support are available.
+The docker image is distributed through Dockerhub and includes `UnMicst` with all of its dependencies. Use `docker pull` to retrieve a specific version or the `latest` tag:
 
 ```
 docker pull labsyspharm/unmicst:latest
-docker pull labsyspharm/unmicst:latest-gpu
+docker pull labsyspharm/unmicst:2.6.11
 ```
 
 Instatiate a container and mount the input directory containing your image.
 ```
-docker run -it --runtime=nvidia -v /path/to/data:/data labsyspharm/unmicst:latest-gpu bash
+docker run -it --runtime=nvidia -v /path/to/data:/data labsyspharm/unmicst:latest bash
 ```
-When using the CPU-only image, `--runtime=nvidia` can be omitted:
+When running the code without using a GPU, `--runtime=nvidia` can be omitted:
 ```
 docker run -it -v /path/to/data:/data labsyspharm/unmicst:latest bash
 ```
