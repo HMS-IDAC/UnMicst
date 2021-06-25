@@ -629,6 +629,7 @@ if __name__ == '__main__':
 
 	if not os.path.exists(args.outputPath):
 		os.makedirs(args.outputPath)
+		os.makedirs(args.outputPath + '//qc')
 
 	append_kwargs = {
 		'bigtiff': True,
@@ -651,8 +652,8 @@ if __name__ == '__main__':
 				skimage.io.imsave(args.outputPath + '//' + fileNamePrefix[0] + '_Probabilities_' + str(dapiChannel) + '.tif',np.uint8(255 * PM),**append_kwargs)
 			if slice==1:
 				save_kwargs['append'] = False
-				skimage.io.imsave(args.outputPath + '//' + fileNamePrefix[0] + '_Preview_' + str(dapiChannel) + '.tif',	np.uint8(255 * PM), **save_kwargs)
-				skimage.io.imsave(args.outputPath + '//' + fileNamePrefix[0] + '_Preview_' + str(dapiChannel) + '.tif', np.uint8(255 * rawI), **append_kwargs)
+				skimage.io.imsave(args.outputPath + '//qc//' + fileNamePrefix[0] + '_Preview_' + str(dapiChannel) + '.tif',	np.uint8(255 * PM), **save_kwargs)
+				skimage.io.imsave(args.outputPath + '//qc//' + fileNamePrefix[0] + '_Preview_' + str(dapiChannel) + '.tif', np.uint8(255 * rawI), **append_kwargs)
 			slice = slice + 1
 
 	else:
@@ -668,12 +669,3 @@ if __name__ == '__main__':
 		skimage.io.imsave(args.outputPath + '//' + fileNamePrefix[0] + '_NucleiPM_' + str(dapiChannel) + '.tif',np.uint8(255 * nuclei), **save_kwargs)
 		del nuclei
 	UNet2D.singleImageInferenceCleanup()
-
-#aligned output files to reflect ilastik
-#outputting all classes as single file
-#handles multiple formats including tif, ome.tif, nd2, czi
-#selectable models (human nuclei, mouse nuclei, cytoplasm)
-
-#added legacy function to save output files
-#append save function to reduce memory footprint
-#added --classOrder parameter to specify which class is background, contours, and nuclei respectively

@@ -808,6 +808,7 @@ if __name__ == '__main__':
 
 	if not os.path.exists(args.outputPath):
 		os.makedirs(args.outputPath)
+		os.makedirs(args.outputPath + '//qc')
 
 	append_kwargs = {
 		'bigtiff': True,
@@ -835,9 +836,9 @@ if __name__ == '__main__':
 					np.uint8(255 * PM), **append_kwargs)
 			if slice == 1:
 				save_kwargs['append'] = False
-				skimage.io.imsave(args.outputPath + '//' + fileNamePrefix[0] + '_Preview_' + str(dapiChannel) + '.tif',
+				skimage.io.imsave(args.outputPath +  '//qc//' + fileNamePrefix[0] + '_Preview_' + str(dapiChannel) + '.tif',
 								  np.uint8(255 * PM), **save_kwargs)
-				skimage.io.imsave(args.outputPath + '//' + fileNamePrefix[0] + '_Preview_' + str(dapiChannel) + '.tif',
+				skimage.io.imsave(args.outputPath +  '//qc//' + fileNamePrefix[0] + '_Preview_' + str(dapiChannel) + '.tif',
 								  np.uint8(255 * rawI), **append_kwargs)
 			slice = slice + 1
 
