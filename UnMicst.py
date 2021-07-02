@@ -629,7 +629,7 @@ if __name__ == '__main__':
 
 	if not os.path.exists(args.outputPath):
 		os.makedirs(args.outputPath)
-		os.makedirs(args.outputPath + '//qc')
+	os.makedirs(args.outputPath + '//qc')
 
 	append_kwargs = {
 		'bigtiff': True,
