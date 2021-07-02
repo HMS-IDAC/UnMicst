@@ -820,6 +820,7 @@ if __name__ == '__main__':
 		'metadata': None,
 		'append': False,
 	}
+	print(nClass)
 	if args.stackOutput:
 		slice = 0
 		for iClass in args.classOrder[::-1]:
@@ -841,6 +842,7 @@ if __name__ == '__main__':
 				skimage.io.imsave(args.outputPath +  '//qc//' + fileNamePrefix[0] + '_Preview_' + str(dapiChannel) + '.tif',
 								  np.uint8(255 * rawI), **append_kwargs)
 			slice = slice + 1
+			print(slice)
 
 	else:
 		contours = np.uint8(255 * UNet2D.singleImageInference(cells, 'accumulate', args.classOrder[1]))
