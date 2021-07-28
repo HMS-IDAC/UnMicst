@@ -735,6 +735,7 @@ if __name__ == '__main__':
 	# modelPath = os.path.join(scriptPath, 'models/cytoplasmINcell')
 	# modelPath = os.path.join(scriptPath, 'cytoplasmZeissNikon')
 	pmPath = ''
+
 	if os.system('nvidia-smi') == 0:
 		if args.GPU == -1:
 			print("automatically choosing GPU")
@@ -764,7 +765,7 @@ if __name__ == '__main__':
 	# 	channel = args.channel[0]
 	# else:
 	# 	channel = args.channel
-	print('Using channel ' + str(channel))
+	print('Using channel ' + str(int(channel)+1))
 	dsFactor = args.scalingFactor
 	parentFolder = os.path.dirname(os.path.dirname(imagePath))
 	fileName = os.path.basename(imagePath)
@@ -829,88 +830,29 @@ if __name__ == '__main__':
 			PM = resize(PM, (rawVert, rawHorz))
 			if slice == 0:
 				skimage.io.imsave(
-					args.outputPath + '//' + fileNamePrefix[0] + '_Probabilities_' + str(dapiChannel) + '.tif',
+					args.outputPath + '//' + fileNamePrefix[0] + '_Probabilities_' + str(int(dapiChannel)+1) + '.tif',
 					np.uint8(255 * PM), **save_kwargs)
 			else:
 				skimage.io.imsave(
-					args.outputPath + '//' + fileNamePrefix[0] + '_Probabilities_' + str(dapiChannel) + '.tif',
+					args.outputPath + '//' + fileNamePrefix[0] + '_Probabilities_' + str(int(dapiChannel)+1) + '.tif',
 					np.uint8(255 * PM), **append_kwargs)
 			if slice == 1:
 				save_kwargs['append'] = False
-				skimage.io.imsave(args.outputPath + '//qc//' + fileNamePrefix[0] + '_Preview_' + str(dapiChannel) + '.tif', np.uint8(255 * PM), **save_kwargs)
-				skimage.io.imsave(args.outputPath + '//qc//' + fileNamePrefix[0] + '_Preview_' + str(dapiChannel) + '.tif', np.uint8(255 * rawI), **append_kwargs)
+				skimage.io.imsave(args.outputPath + '//qc//' + fileNamePrefix[0] + '_Preview_' + str(int(dapiChannel)+1) + '.tif', np.uint8(255 * PM), **save_kwargs)
+				skimage.io.imsave(args.outputPath + '//qc//' + fileNamePrefix[0] + '_Preview_' + str(int(dapiChannel)+1) + '.tif', np.uint8(255 * rawI), **append_kwargs)
 			slice = slice + 1
 
 
 	else:
 		contours = np.uint8(255 * UNet2D.singleImageInference(cells, 'accumulate', args.classOrder[1]))
 		contours = resize(contours, (rawVert, rawHorz))
-		skimage.io.imsave(args.outputPath + '//' + fileNamePrefix[0] + '_ContoursPM_' + str(dapiChannel) + '.tif', np.uint8(255 * contours), **save_kwargs)
-		skimage.io.imsave(args.outputPath + '//' + fileNamePrefix[0] + '_ContoursPM_' + str(dapiChannel) + '.tif', np.uint8(255 * rawI), **append_kwargs)
+		skimage.io.imsave(args.outputPath + '//' + fileNamePrefix[0] + '_ContoursPM_' + str(int(dapiChannel)+1) + '.tif', np.uint8(255 * contours), **save_kwargs)
+		skimage.io.imsave(args.outputPath + '//' + fileNamePrefix[0] + '_ContoursPM_' + str(int(dapiChannel)+1) + '.tif', np.uint8(255 * rawI), **append_kwargs)
 		del contours
 		nuclei = np.uint8(255 * UNet2D.singleImageInference(cells, 'accumulate', args.classOrder[2]))
 		nuclei = resize(nuclei, (rawVert, rawHorz))
-		skimage.io.imsave(args.outputPath + '//' + fileNamePrefix[0] + '_NucleiPM_' + str(dapiChannel) + '.tif', np.uint8(255 * nuclei), **save_kwargs)
+		skimage.io.imsave(args.outputPath + '//' + fileNamePrefix[0] + '_NucleiPM_' + str(int(dapiChannel)+1) + '.tif', np.uint8(255 * nuclei), **save_kwargs)
 		del nuclei
 	UNet2D.singleImageInferenceCleanup()
 
 
-
-
-	# logPath = 'D:\\LSP\\UNet\\TuuliaLPTBdapiTFv2\\TFLogs'
-	# modelPath = 'D:\\LSP\\UNet\\TuuliaLPTBdapiTFv2'
-	# pmPath = 'D:\\LSP\\UNet\\TuuliaLPTBdapiTFv2\\TFProbMaps'
-	# pmPath1 = 'D:\\LSP\\UNet\\LPTCGSdapiRTAug6-18-16\\TFProbMaps1'
-
-	# ----- test 1 -----
-
-	# imPath = 'D:\\LSP\\cycif\\LPTBdapiRTAug64'
-	# validPath = 'D:\\LSP\\cycif\\LPTBdapiRTAug64\\valid'
-	# testPath = 'D:\\LSP\\cycif\\LPTBdapiRTAug64\\test'
-	#
-	# # UNet2D.setup(64, 1, 3, 80, 2, 2, 3, 0, 0.03, 4, 32)  # 64 0.0001 4
-	# # UNet2D.train(imPath, validPath, testPath, logPath, modelPath, pmPath,  3401, 120, 196, False, 20000, 0, 2)
-	# UNet2D.deploy(testPath, 196, modelPath, pmPath, 0, 1)
-
-	# UNet2D.singleImageInferenceSetup(modelPath, 1)
-	# imagePath = 'Y:\\sorger\\data\\RareCyte\\Tuulia\\mcmicro\\Topacio\\01092020'
-	# sampleList = glob.glob(imagePath + '\\*')
-	# dapiChannel = 0
-	# # laminChannel = 33
-	# dsFactor =1
-	# for iSample in sampleList:
-	# 	fileList = glob.glob(iSample + '\\registration\\*.ome.tif')
-	# 	print(fileList)
-	# 	for iFile in fileList:
-	# 		fileName = os.path.basename(iFile)
-	# 		fileNamePrefix = fileName.split(os.extsep, 1)
-	# 		#I = tifffile.imread(iFile, key=dapiChannel)
-	# 		dapi = skio.imread(iFile, key=dapiChannel,img_num=dapiChannel)
-	# 		# lamin = skio.imread(iFile, key=laminChannel, img_num=laminChannel)
-	# 		rawI = dapi
-	# 		hsize = int((float(dapi.shape[0]) * float(dsFactor)))
-	# 		vsize = int((float(dapi.shape[1]) * float(dsFactor)))
-	# 		dapi = cv2.resize(dapi, (vsize, hsize), interpolation=cv2.INTER_CUBIC)
-	# 		# lamin = cv2.resize(lamin, (vsize, hsize), interpolation=cv2.INTER_CUBIC)
-	#
-	# 		dapi=im2double(dapi)
-	# 		# lamin = im2double(lamin)
-	# 		dapi = im2double(sk.rescale_intensity(dapi, in_range=(np.percentile(dapi,1), np.percentile(dapi,99.9)), out_range=(0, 0.983)))
-	#
-	#
-	# 		rawI = im2double(rawI)/np.max(im2double(rawI))
-	# 		outputPath = iSample + '//probmapsSaturated'
-	# 		if not os.path.exists(outputPath):
-	# 			os.makedirs(outputPath)
-	# 		K = np.zeros((2,rawI.shape[0],rawI.shape[1]))
-	# 		contours = UNet2D.singleImageInference(dapi,'accumulate',1)
-	# 		hsize = rawI.shape[0]
-	# 		vsize = rawI.shape[1]
-	# 		contours = resize(contours,(hsize,vsize))
-	# 		# contours = cv2.resize(contours,  (vsize, hsize), interpolation=cv2.INTER_CUBIC)
-	# 		K[1,:,:] = rawI
-	# 		K[0,:,:] = contours
-	# 		tifwrite(np.uint8(255 * K),
-	# 				 outputPath + '//' + fileNamePrefix[0] + '_ContoursPM_' + str(dapiChannel + 1) + '.tif')
-	# 		del K
-	# UNet2D.singleImageInferenceCleanup()

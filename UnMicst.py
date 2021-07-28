@@ -647,13 +647,13 @@ if __name__ == '__main__':
 			PM = np.uint8(255*UNet2D.singleImageInference(I, 'accumulate', iClass)) # backwards in order to align with ilastik...
 			PM = resize(PM, (rawI.shape[0], rawI.shape[1]))
 			if slice==0:
-				skimage.io.imsave(args.outputPath + '//' + fileNamePrefix[0] + '_Probabilities_' + str(dapiChannel) + '.tif', np.uint8(255 * PM),**save_kwargs)
+				skimage.io.imsave(args.outputPath + '//' + fileNamePrefix[0] + '_Probabilities_' + str(dapiChannel+1) + '.tif', np.uint8(255 * PM),**save_kwargs)
 			else:
-				skimage.io.imsave(args.outputPath + '//' + fileNamePrefix[0] + '_Probabilities_' + str(dapiChannel) + '.tif',np.uint8(255 * PM),**append_kwargs)
+				skimage.io.imsave(args.outputPath + '//' + fileNamePrefix[0] + '_Probabilities_' + str(dapiChannel+1) + '.tif',np.uint8(255 * PM),**append_kwargs)
 			if slice==1:
 				save_kwargs['append'] = False
-				skimage.io.imsave(args.outputPath + '//qc//' + fileNamePrefix[0] + '_Preview_' + str(dapiChannel) + '.tif',	np.uint8(255 * PM), **save_kwargs)
-				skimage.io.imsave(args.outputPath + '//qc//' + fileNamePrefix[0] + '_Preview_' + str(dapiChannel) + '.tif', np.uint8(255 * rawI), **append_kwargs)
+				skimage.io.imsave(args.outputPath + '//qc//' + fileNamePrefix[0] + '_Preview_' + str(dapiChannel+1) + '.tif',	np.uint8(255 * PM), **save_kwargs)
+				skimage.io.imsave(args.outputPath + '//qc//' + fileNamePrefix[0] + '_Preview_' + str(dapiChannel+1) + '.tif', np.uint8(255 * rawI), **append_kwargs)
 			slice = slice + 1
 
 	else:
@@ -661,11 +661,11 @@ if __name__ == '__main__':
 		hsize = int((float(I.shape[0]) * float(1 / dsFactor)))
 		vsize = int((float(I.shape[1]) * float(1 / dsFactor)))
 		contours = resize(contours, (rawI.shape[0], rawI.shape[1]))
-		skimage.io.imsave(args.outputPath + '//' + fileNamePrefix[0] + '_ContoursPM_' + str(dapiChannel) + '.tif',np.uint8(255 * contours),**save_kwargs)
-		skimage.io.imsave(args.outputPath + '//' + fileNamePrefix[0] + '_ContoursPM_' + str(dapiChannel) + '.tif',np.uint8(255 * rawI), **append_kwargs)
+		skimage.io.imsave(args.outputPath + '//' + fileNamePrefix[0] + '_ContoursPM_' + str(dapiChannel+1) + '.tif',np.uint8(255 * contours),**save_kwargs)
+		skimage.io.imsave(args.outputPath + '//' + fileNamePrefix[0] + '_ContoursPM_' + str(dapiChannel+1) + '.tif',np.uint8(255 * rawI), **append_kwargs)
 		del contours
 		nuclei = np.uint8(255*UNet2D.singleImageInference(I, 'accumulate', args.classOrder[2]))
 		nuclei = resize(nuclei, (rawI.shape[0], rawI.shape[1]))
-		skimage.io.imsave(args.outputPath + '//' + fileNamePrefix[0] + '_NucleiPM_' + str(dapiChannel) + '.tif',np.uint8(255 * nuclei), **save_kwargs)
+		skimage.io.imsave(args.outputPath + '//' + fileNamePrefix[0] + '_NucleiPM_' + str(dapiChannel+1) + '.tif',np.uint8(255 * nuclei), **save_kwargs)
 		del nuclei
 	UNet2D.singleImageInferenceCleanup()
