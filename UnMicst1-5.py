@@ -773,8 +773,10 @@ if __name__ == '__main__':
 	fileName = os.path.basename(imagePath)
 	fileNamePrefix = fileName.split(os.extsep)
 	# print(fileName)
-	if fileNamePrefix[-2] == "ome":
-		fileType = fileNamePrefix[-2] + fileNamePrefix[-1]
+	if len(fileNamePrefix) < 2:
+		raise NotImplementedError("Input filename has no extension")
+	elif fileNamePrefix[-2] == "ome":
+		fileType = os.extsep.join(fileNamePrefix[-2:])
 		fileStem = os.extsep.join(fileNamePrefix[0:-2])
 	else:
 		fileType = fileNamePrefix[-1]
@@ -818,7 +820,7 @@ if __name__ == '__main__':
 
 	if not os.path.exists(args.outputPath):
 		os.makedirs(args.outputPath)
-	os.makedirs(args.outputPath + '//qc')
+	os.makedirs(args.outputPath + '//qc', exist_ok=True)
 
 	append_kwargs = {
 		'bigtiff': True,
