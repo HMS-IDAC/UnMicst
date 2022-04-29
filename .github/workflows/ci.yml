@@ -1,0 +1,28 @@
+name: CI
+on: [push, pull_request, workflow_dispatch]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Build the Docker container
+        run: docker build -t unmicst:test .
+
+      # Cache test data to avoid repeated download
+      - uses: actions/cache@v3
+        id: cache-data
+        with:
+          path: |
+            ~/data/exemplar-001-cycle6.ome.tif
+          key: testdata-2022-04-29
+
+      # Download test data only if no cache is present
+      - name: Test data download
+        if: steps.cache-data.outputs.cache-hit != 'true'
+        run: |
+          mkdir ~/data
+          cd ~/data
+          curl -f -o exemplar-001-cycle6.ome.tif https://mcmicro.s3.amazonaws.com/exemplars/exemplar-001-cycle6.ome.tif
+
