@@ -29,6 +29,8 @@ jobs:
       - name: Test the container
         run: |
           cd ~/data
+          rm -f exemplar-001-cycle6_Probabilities_1.tif
+          rm -rf qc/
           docker run -v "$PWD":/data unmicst:test /bin/bash -c "cd /data; \
             python /app/unmicstWrapper.py --stackOutput --outputPath . exemplar-001-cycle6.ome.tif"
 
@@ -38,4 +40,5 @@ jobs:
         with:
           name: exemplar-001
           path: |
-            ~/data/exemplar-001.ome.tif
+            ~/data/exemplar-001-cycle6_Probabilities_1.tif
+            ~/data/qc/**
