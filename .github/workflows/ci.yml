@@ -24,5 +24,18 @@ jobs:
         run: |
           mkdir ~/data
           cd ~/data
-          curl -f -o exemplar-001-cycle6.ome.tif https://mcmicro.s3.amazonaws.com/exemplars/exemplar-001-cycle6.ome.tif
+          curl -f -o exemplar-001-cycle6.ome.tif https://mcmicro.s3.amazonaws.com/ci/exemplar-001-cycle6.ome.tif
 
+      - name: Test the container
+        run: |
+          cd ~/data
+          docker run -v "$PWD":/data unmicst:test /bin/bash -c "cd /data; \
+            python /app/unmicstWrapper.py --stackOutput --outputPath . exemplar-001-cycle6.ome.tif"
+
+      # If the action is successful, the output will be available as a downloadable artifact
+      - name: Upload processed result
+        uses: actions/upload-artifact@v2
+        with:
+          name: exemplar-001
+          path: |
+            ~/data/exemplar-001.ome.tif
