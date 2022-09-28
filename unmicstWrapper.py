@@ -18,6 +18,7 @@ if __name__ == '__main__':
     parser.add_argument("--outlier",
                         help="map percentile intensity to max when rescaling intensity values. Max intensity as default",
                         type=float, default=-1)
+    parser.add_argument("--verbose", help="display error messages for debugging", action='store_true')
     args = parser.parse_args()
 
 
@@ -80,6 +81,8 @@ else:
     cmd = cmd + " --classOrder " + str(classOrder[0]) + " " + str(classOrder[1]) + " " + str(
         classOrder[2])
 
+if args.verbose:
+    cmd = cmd + " --verbose"
 
 
 print(cmd)

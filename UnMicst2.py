@@ -1,9 +1,7 @@
 import numpy as np
 from scipy import misc
 import os
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 import logging
-logging.getLogger('tensorflow').setLevel(logging.FATAL)
 
 import tensorflow.compat.v1 as tf
 from tensorflow import keras
@@ -706,7 +704,16 @@ if __name__ == '__main__':
     parser.add_argument("--stackOutput", help="save probability maps as separate files", action='store_true')
     parser.add_argument("--GPU", help="explicitly select GPU", type=int, default = -1)
     parser.add_argument("--outlier", help="map percentile intensity to max when rescaling intensity values. Max intensity as default", type=float, default=-1)
+    parser.add_argument("--verbose", help="display error messages for debugging", action='store_true')
     args = parser.parse_args()
+
+    if args.verbose:
+        os.environ['TF_CPP_MIN_LOG_LEVEL'] = '0'
+        logging.getLogger('tensorflow').setLevel(logging.DEBUG)
+    else:
+        os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+        logging.getLogger('tensorflow').setLevel(logging.FATAL)
+
 
     logPath = ''
     scriptPath = os.path.dirname(os.path.realpath(__file__))
@@ -788,7 +795,7 @@ if __name__ == '__main__':
 
     if not os.path.exists(args.outputPath):
         os.makedirs(args.outputPath)
-    os.makedirs(args.outputPath + '//qc')
+    os.makedirs(args.outputPath + '//qc', exist_ok=True)
 
     append_kwargs = {
         'bigtiff': True,
