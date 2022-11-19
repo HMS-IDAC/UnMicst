@@ -35,7 +35,7 @@ Nuclei segmentation, especially for tissues, is a challenging and unsolved probl
 
 # How to run with list of parameters
 Please run `unmicstwrapper.py` function with the following parameters:
-1. `--tool` : specify which UnMICST version you want to use (ie. unmicst, unmicst-solo, unmicst-duo). The first one deploys a mouse model and is deprecated. unmicst-solo (DEFAULT) uses the DNA channel only. unmicst-duo uses DNA and nuclear envelope staining.
+1. `--tool` : specify which UnMICST version you want to use (ie. unmicst-legacy, unmicst-solo, unmicst-duo). unmicst-legacy deploys a mouse model and is deprecated. unmicst-solo (DEFAULT) uses the DNA channel only. unmicst-duo uses DNA and nuclear envelope staining.
 2. `--channel` : specify the channel(s) to be used. 
 3. `--scalingFactor` : an upsample or downsample factor if your pixel sizes are mismatched from the dataset.
 4. `--mean` and `--std` : If your image is vastly different in terms of brightness/contrast, enter the image mean and standard deviation here.
