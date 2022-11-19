@@ -33,8 +33,9 @@ Nuclei segmentation, especially for tissues, is a challenging and unsolved probl
 1. a tiff stack where the different probability maps for each class are concatenated in the Z-axis in the order: nuclei foreground, nuclei contours, and background with suffix *_Probabilities*
 2. a QC image with the DNA image concatenated with the nuclei contour probability map with suffix *_Preview*
 
-# Parameter list
-1. `--tool` : specify which UnMICST version you want to use (ie. UnMicst, UnMicst1-5, UnMicst2). v1 is deprecated. v1.5 uses the DNA channel only. v2 uses DNA and nuclear envelope staining.
+# How to run with list of parameters
+Please run `unmicstwrapper.py` function with the following parameters:
+1. `--tool` : specify which UnMICST version you want to use (ie. unmicst, unmicst-solo, unmicst-duo). The first one deploys a mouse model and is deprecated. unmicst-solo (DEFAULT) uses the DNA channel only. unmicst-duo uses DNA and nuclear envelope staining.
 2. `--channel` : specify the channel(s) to be used. 
 3. `--scalingFactor` : an upsample or downsample factor if your pixel sizes are mismatched from the dataset.
 4. `--mean` and `--std` : If your image is vastly different in terms of brightness/contrast, enter the image mean and standard deviation here.
@@ -46,7 +47,6 @@ The docker image is distributed through Dockerhub and includes `UnMicst` with al
 
 ```
 docker pull labsyspharm/unmicst:latest
-docker pull labsyspharm/unmicst:2.6.11
 ```
 
 Instatiate a container and mount the input directory containing your image.
@@ -66,7 +66,7 @@ root@0ea0cdc46c8f:/# python app/UnMicst.py /data/input/my.tif --outputPath /data
 
 
 **References:** <br/>
-Clarence Yapp, Edward Novikov, Won-Dong Jang, Yu-An Chen, Marcelo Cicconet, Zoltan Maliga, Connor A. Jacobson, Donglai Wei, Sandro Santagata, Hanspeter Pfister, Peter K. Sorger, 2021, UnMICST: Deep learning with real augmentation for robust segmentation of highly multiplexed images of human tissues
+Clarence Yapp*, Edward Novikov*, Won-Dong Jang, Tuulia Vallius, Yu-An Chen, Marcelo Cicconet, Zoltan Maliga, Connor A. Jacobson, Donglai Wei, Sandro Santagata, Hanspeter Pfister, Peter K. Sorger, 2022, UnMICST: Deep learning with real augmentation for robust segmentation of highly multiplexed images of human tissues, Nat Commun Biol., 5,1263 https://doi.org/10.1038/s42003-022-04076-3
 
 S Saka, Y Wang, J Kishi, A Zhu, Y Zeng, W Xie, K Kirli, C Yapp, M Cicconet, BJ Beliveau, SW Lapan, S Yin, M Lin, E Boyde, PS Kaeser, G Pihan, GM Church, P Yin, 2020, Highly multiplexed in situ protein imaging with signal amplification by Immuno-SABER, Nat Biotechnology 
 
