@@ -86,4 +86,5 @@ if args.verbose:
 
 
 print(cmd)
-os.system(cmd)
+# FIXME tool should be imported as a python module and called as a function
+os.execvp("python", cmd.split())
